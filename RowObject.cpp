@@ -14,7 +14,7 @@ public:
     RowObject();
     RowObject(int rid, int y, const char* cn, const char* s, int n, float age);
     //Write ostream operator
-    friend ostream& operator << (ostream& os, const RowObject* ro);
+    friend ostream& operator<< (ostream& os, const RowObject* ro);
     //Write overloaded = operator for 10 extra points
     //Write destructor
 };
