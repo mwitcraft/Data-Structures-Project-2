@@ -1,6 +1,9 @@
 #include <iostream>
 using namespace std;
 
+
+//********************************************************************//
+
 template <class DT>
 class DataFrame{
 protected:
@@ -203,6 +206,7 @@ int main(){
 //******************************************************************************************//
 
 
+/*
 int main(){
     RowObject* newRow;
     newRow = new RowObject(1, 1, "1", "1", 1, 1);
@@ -236,4 +240,41 @@ int main(){
     cout << endl;
     df->display();
 
+}
+*/
+
+int main(){
+    int numRows;
+    int numCols = 5;
+
+    DataFrame<RowObject>* DBT;
+
+    int selectR[10];
+
+    for(int i = 0; i < 10; ++i){
+        selectR[i] = i + 2;
+    }
+
+    cin >> numRows;
+    DBT = new DataFrame<RowObject>(numRows, numCols);
+
+    for(int i = 0; i < numCols; ++i){
+        char* name = new char[100];
+        char c;
+        cin >> c;
+        int j = 0;
+        while(c != ',' && c != '\n'){
+            name[j] = c;
+            cin.get(c);
+            ++j;
+        }
+        name[j] = '\0';
+        DBT->setColName(i, name);
+    }
+
+    char** names = DBT->getColNames();
+
+    for(int i = 0; i < 5; ++i){
+        cout << names[i] << endl;
+    }
 }
