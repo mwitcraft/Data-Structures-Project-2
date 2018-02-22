@@ -42,9 +42,9 @@ DataFrame<DT>::DataFrame(int numRows, int numCols){
 template <class DT>
 void DataFrame<DT>::display(){
     for(int i = 0; i < noRows; ++i){
-        cout << dataRows[i];
+        cout << dataRows[i] << endl;
     }
-    cout << "DONE" << endl;
+    cout << endl;
 }
 
 template <class DT>
@@ -98,15 +98,25 @@ void DataFrame<DT>::addRow(DT*& newRow){
 }
 
 template <class DT>
-void DataFrame<DT>::removeRow(int i){
+void DataFrame<DT>::removeRow(int position){
+    cout << "position: " << position << endl;
     DT** newRows;
     newRows = new DT*[noRows - 1];
-    for(int j = 0; j < noRows; ++j){
-        if(j != i){
-            newRows[j] = dataRows[j];
+    for(int i = 0; i < noRows; ++i){
+        if(i < position){
+            newRows[i] = dataRows[i];
+        }
+
+        if(i == position){
+            cout << "Deleting: " << dataRows[i] << endl;
+        }
+
+        if(i > position){
+            newRows[i - 1] = dataRows[i];
         }
     }
 
+    --noRows;
     dataRows = newRows;
 }
 
@@ -194,13 +204,33 @@ int main(){
 
 int main(){
     RowObject* newRow;
-    newRow = new RowObject(6, 2018, "Cancer", "Oklahoma", 200, 58.2);
-
+    newRow = new RowObject(1, 1, "1", "1", 1, 1);
+    RowObject* row2;
+    row2 = new RowObject(2, 2, "2", "2", 2, 2);
+    RowObject* row3;
+    row3 = new RowObject(3, 3, "3", "3", 3, 3);
+    RowObject* row4;
+    row4 = new RowObject(4, 4, "4", "4", 4, 4);
+    RowObject* row5;
+    row5 = new RowObject(5, 5, "5", "5", 5, 5);
 
     DataFrame<RowObject>* df;
     df = new DataFrame<RowObject>(0, 2);
 
     df->addRow(newRow);
+    df->addRow(row2);
+    df->addRow(row3);
+    df->addRow(row4);
+    df->addRow(row5);    
+    df->display();
+
+    cout << "------------------------" << endl;
+    cout << endl;
+
+    df->removeRow(0);
+    df->removeRow(4);
+    df->addRow(newRow);
+    cout << endl;
     df->display();
 
 }
