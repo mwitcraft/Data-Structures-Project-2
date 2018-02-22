@@ -20,7 +20,7 @@ public:
     DataFrame<DT>* getRows(int* rows, int rLen);
     void addRow(DT*& newRow);//Add new row at end
     void removeRow(int i);//Remove the ith row
-    void insertRow(int position, DT& newRow);
+    void insertRow(int position, DT*& newRow);
     ~DataFrame();
     //Write the ostream operator
     //write the = operator for 10 extra points
@@ -121,7 +121,7 @@ void DataFrame<DT>::removeRow(int position){
 }
 
 template <class DT>
-void DataFrame<DT>::insertRow(int position, DT& newRow){
+void DataFrame<DT>::insertRow(int position, DT*& newRow){
     DT** newRows;
     newRows = new DT*[noRows + 1];
     for(int i = 0; i < noRows + 1; ++i){
@@ -138,6 +138,7 @@ void DataFrame<DT>::insertRow(int position, DT& newRow){
         }
     }
 
+    ++noRows;
     dataRows = newRows;
 }
 
@@ -227,9 +228,11 @@ int main(){
     cout << "------------------------" << endl;
     cout << endl;
 
-    df->removeRow(0);
-    df->removeRow(4);
-    df->addRow(newRow);
+    RowObject* insertedRow;
+    insertedRow = new RowObject(99, 99, "99", "99", 99, 99);
+
+
+    df->insertRow(5, insertedRow);
     cout << endl;
     df->display();
 
