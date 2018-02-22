@@ -244,6 +244,9 @@ int main(){
 */
 
 int main(){
+
+//******************************************************************//
+//Here column names are set    
     int numRows;
     int numCols = 5;
 
@@ -272,9 +275,39 @@ int main(){
         DBT->setColName(i, name);
     }
 
-    char** names = DBT->getColNames();
+//*************************************************************************/
 
-    for(int i = 0; i < 5; ++i){
-        cout << names[i] << endl;
+    cout << DBT->getNumberRows() << endl;
+    cout << numCols << endl;
+
+        char** names = new char*[DBT->getNumberRows()];
+
+
+    for(int i = 0; i < DBT->getNumberRows(); ++i){
+        char c;
+        cin >> c;
+
+        int year;
+        char* causeName;
+        char* state;
+        int numberOfDeaths;
+        float averageAge;
+
+
+
+        char* name = new char[100];
+        int j = 0;
+        while(c != '\n'){
+            name[j] = c;
+            cin.get(c);
+            ++j;
+        }
+        name[j] = '\0';
+        names[i] = name;
     }
+
+            for(int x = 0; x < DBT->getNumberRows(); ++x){
+            cout << names[x] << endl;
+        }
+
 }
