@@ -280,10 +280,10 @@ int main(){
     cout << DBT->getNumberRows() << endl;
     cout << numCols << endl;
 
-        char** names = new char*[DBT->getNumberRows()];
+    char** names = new char*[numRows];
 
-
-    for(int i = 0; i < DBT->getNumberRows(); ++i){
+/*
+    for(int i = 0; i < numRows; ++i){
         char c;
         cin >> c;
 
@@ -293,21 +293,145 @@ int main(){
         int numberOfDeaths;
         float averageAge;
 
+*/
 
+        // char* name = new char[100];
+        //int j = 0;
 
-        char* name = new char[100];
-        int j = 0;
+/*
         while(c != '\n'){
             name[j] = c;
             cin.get(c);
             ++j;
         }
         name[j] = '\0';
-        names[i] = name;
+*/
+/*
+        char** names = new char*[numRows];
+
+        for(int i = 0; i < numRows * numCols; ++i){
+            cout << "i: " << i << endl;
+            char* val = new char[100];
+            int j = 0;
+            
+            while(c != ',' && c != '\n' && !cin.eof()){
+                // cout << "C: " << c << endl;
+                val[j] = c;
+                cin.get(c);
+                ++j;
+            }
+            cin >> c;
+            val[j] = '\0';
+            cout << "val: " << val << endl;
+        }
+
+        for(int i = 0; i < numRows; ++i){
+            cout << names[i] << endl;
+        }
+
+
+        // names[i] = name;
+    }
+    */
+
+    char** lines = new char*[numRows];
+
+
+    for(int i = 0; i < numRows; ++i){
+        char c;
+        cin >> c;
+
+        int j = 0;
+        char* line = new char[1000];
+        while(c != '\n'){
+            line[j] = c;
+            cin.get(c);
+            ++j;
+        }
+        line[j] = ',';
+        line[j + 1] = '\0';
+        lines[i] = line;
     }
 
-            for(int x = 0; x < DBT->getNumberRows(); ++x){
-            cout << names[x] << endl;
+    // for(int i = 0; i < numRows; ++i){
+    //     cout << "ID: " << i << " Row: " << lines[i] << endl;
+    // }
+
+    for(int i = 0; i < numRows; ++i){
+        int ID;
+        int year;
+        char* causeName;
+        char* state;
+        int numberOfDeaths;
+        float averageAge;
+
+        char* row = lines[i];
+
+        int rowIndex = 0;
+        int column = 0;
+        char* val = new char[100];
+            int valIndex = 0;
+
+        while(row[rowIndex] != '\0'){
+
+
+            if(row[rowIndex] == ','){
+                switch(column){
+                    case(0):
+                        cout << "Year: "<< val << endl;
+                        // val = new char[100];
+                        // valIndex = 0;
+                        // ++column;
+                        break;
+                    case(1):
+                        cout << "Cause: " << val << endl;
+                        // val = new char[100];
+                        // valIndex = 0;
+                        // ++column;
+                        break;
+                    case(2):
+                        cout << "State: " << val << endl;
+                        // val = new char[100];
+                        // valIndex = 0;
+                        // ++column;
+                        break;
+                    case(3):
+                        cout << "Deaths: " << val << endl;
+                        // val = new char[100];
+                        // valIndex = 0;
+                        // ++column;
+                        break;
+                    case(4):
+                        cout << "Age: " << val << endl;
+                        // val = new char[100];
+                        // valIndex = 0;
+                        // ++column;
+                        cout << endl;
+                        break;
+                }
+
+                        val = new char[100];
+                        valIndex = 0;
+                        ++column;
+            } else {
+                // switch(column){
+                //     case(0):
+                //         val[rowIndex] = row[rowIndex];
+                //         break;
+                // }
+                val[valIndex] = row[rowIndex];
+                ++ valIndex;
+            }
+
+            ++rowIndex;
+
         }
+    }
+
+
+
+
+
+
 
 }
