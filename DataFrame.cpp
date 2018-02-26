@@ -348,8 +348,9 @@ int main(){
             cin.get(c);
             ++j;
         }
-        line[j] = ',';
-        line[j + 1] = '\0';
+        // line[j] = ',';
+        // line[j + 1] = '\0';
+        line[j] = '\0';
         lines[i] = line;
     }
 
@@ -370,55 +371,30 @@ int main(){
         int rowIndex = 0;
         int column = 0;
         char* val = new char[100];
-            int valIndex = 0;
-
+        int valIndex = 0;
         while(row[rowIndex] != '\0'){
-
-
             if(row[rowIndex] == ','){
                 switch(column){
                     case(0):
-                        cout << "Year: "<< val << endl;
-                        // val = new char[100];
-                        // valIndex = 0;
-                        // ++column;
+                        year = atoi(val);
                         break;
                     case(1):
-                        cout << "Cause: " << val << endl;
-                        // val = new char[100];
-                        // valIndex = 0;
-                        // ++column;
+                        causeName = val;
                         break;
                     case(2):
-                        cout << "State: " << val << endl;
-                        // val = new char[100];
-                        // valIndex = 0;
-                        // ++column;
+                        state = val;
                         break;
                     case(3):
-                        cout << "Deaths: " << val << endl;
-                        // val = new char[100];
-                        // valIndex = 0;
-                        // ++column;
+                        numberOfDeaths = atoi(val);
                         break;
-                    case(4):
-                        cout << "Age: " << val << endl;
-                        // val = new char[100];
-                        // valIndex = 0;
-                        // ++column;
-                        cout << endl;
-                        break;
+                    // case(4):
+                    //     averageAge = atof(val);
+                    //     break;
                 }
-
-                        val = new char[100];
-                        valIndex = 0;
-                        ++column;
+                   val = new char[100];
+                    valIndex = 0;
+                    ++column;
             } else {
-                // switch(column){
-                //     case(0):
-                //         val[rowIndex] = row[rowIndex];
-                //         break;
-                // }
                 val[valIndex] = row[rowIndex];
                 ++ valIndex;
             }
@@ -426,6 +402,14 @@ int main(){
             ++rowIndex;
 
         }
+
+        if(column == 4){
+            averageAge = atof(val);
+        }
+
+        RowObject* newRow = new RowObject(i, year, causeName, state, numberOfDeaths, averageAge);
+
+        cout << "Row: " << row << endl; 
     }
 
 
