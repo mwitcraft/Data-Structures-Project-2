@@ -23,7 +23,7 @@ public:
     char** getColNames();
     int getNumberRows();
     DataFrame<DT>* getRows(int* rows, int rLen);
-    void addRow(DT& newRow);//Add new row at end
+    void addRow(DT*& newRow);//Add new row at end
     void removeRow(int i);//Remove the ith row
     void insertRow(int position, DT*& newRow);
     ~DataFrame();
@@ -74,7 +74,17 @@ void DataFrame<DT>::display(){
 
 template <class DT>
 void DataFrame<DT>::display(int n){
-
+    for(int i = 0; i < noCols; ++i){
+        if(i != noCols -1){
+            cout << colNames[i] << ',';
+        } else {
+            cout << colNames[i] << '\n';
+        }
+    }
+    for(int i = 0; i < n; ++i){
+        cout << dataRows[i];
+    }
+    cout << endl;
 }
 
 template <class DT>
@@ -111,41 +121,31 @@ DataFrame<DT>* DataFrame<DT>::getRows(int* rows, int rLen){
     int row;
     for(int i = 0; i < rLen; ++i){
         row = rows[i];
-        DT realRow = DT(*dataRows[row]);
-        df->addRow(realRow);
+        df->addRow(dataRows[row]);
     }
     return df;
 }
 
 template <class DT>
-void DataFrame<DT>::addRow(DT& newRow){
+void DataFrame<DT>::addRow(DT*& newRow){
     DT** newRows;
     newRows = new DT*[noRows + 1];
     for(int i = 0; i < noRows; ++i){
         newRows[i] = dataRows[i];
     }
-
-    DT* addr = &newRow;
-
-    newRows[noRows] = addr;
+    newRows[noRows] = newRow;
     ++noRows;
     dataRows = newRows;
 }
 
 template <class DT>
 void DataFrame<DT>::removeRow(int position){
-    cout << "position: " << position << endl;
     DT** newRows;
     newRows = new DT*[noRows - 1];
     for(int i = 0; i < noRows; ++i){
         if(i < position){
             newRows[i] = dataRows[i];
         }
-
-        if(i == position){
-            cout << "Deleting: " << dataRows[i] << endl;
-        }
-
         if(i > position){
             newRows[i - 1] = dataRows[i];
         }
@@ -413,15 +413,31 @@ int main(){
     DataFrame<RowObject>* tempRows = (*DBT).getRows(selectR, 10);
     (*tempRows).display();
 
-// Testing addRow, constructor for RowObject and getNumberRows method
+cout << (*DBT)[4];
+cout << (*DBT)[5];
+cout << (*DBT)[10];
+
+// // Testing addRow, constructor for RowObject and getNumberRows method
 RowObject* newRow;
 newRow = new RowObject((*DBT).getNumberRows(),2018,"Cancer","Oklahoma",200, 58.2);
-(*DBT).addRow(*newRow);
-// Testing destructor for RowObject
-delete newRow;
+DBT->addRow(newRow);
 newRow = new RowObject((*DBT).getNumberRows(),2018,"Opiod","Texas",2000, 32.4);
-(*DBT).addRow(*newRow);
-delete newRow;
+DBT->addRow(newRow);
 cout << (*DBT)[(*DBT).getNumberRows()-2];
 cout << (*DBT)[(*DBT).getNumberRows()-1];
+
+newRow = new RowObject((*DBT).getNumberRows(),2016,"Cancer","Texas",500, 72.1);
+(*DBT).insertRow(1, newRow);
+
+newRow = new RowObject((*DBT).getNumberRows(),2016,"Stroke","Oklahoma",400, 68.1);
+(*DBT).insertRow(4, newRow);
+
+
+// DBT->display();
+
+(*DBT).display(10);
+
+(*DBT).removeRow(1);
+(*DBT).removeRow(3);
+(*DBT).display(10);
 }
