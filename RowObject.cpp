@@ -17,6 +17,7 @@ public:
     friend ostream& operator<< (ostream& os, const RowObject* ro);
     //Write overloaded = operator for 10 extra points
     //Write destructor
+    ~RowObject();
 };
 
 RowObject::RowObject(){}
@@ -35,8 +36,16 @@ ostream& operator<<(ostream& os, const RowObject* ro){
     return os;
 }
 
+RowObject::~RowObject(){
+
+}
+
 int main(){
     RowObject* newRow;
     newRow = new RowObject(6, 2018, "Cancer", "Oklahoma", 200, 58.2);
+    cout << newRow << endl;
+    delete newRow;
+
+    newRow = new RowObject(7, 2019, "Stroke", "Colorado", 300, 60);
     cout << newRow << endl;
 }

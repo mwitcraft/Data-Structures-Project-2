@@ -13,24 +13,38 @@ protected:
     int noRows, noCols;
 public:
     DataFrame();
+    DataFrame(int numberOfColumns);
     DataFrame(int numberOfRows, int numberOfColumns);
     void display();
     void display(int n);//Display first n records
     void setColName(int col, const char* name);
-    DT& operator[](int i); //get the ith row
+    DT* operator[](int i); //get the ith row
+    int getNumberColumns();    
     char** getColNames();
     int getNumberRows();
     DataFrame<DT>* getRows(int* rows, int rLen);
-    void addRow(DT*& newRow);//Add new row at end
+    void addRow(DT& newRow);//Add new row at end
     void removeRow(int i);//Remove the ith row
     void insertRow(int position, DT*& newRow);
     ~DataFrame();
     //Write the ostream operator
+    template<class T>
+    friend ostream& operator<< (ostream& os, DataFrame<T>* df);
     //write the = operator for 10 extra points
 };
 
 template <class DT>
 DataFrame<DT>::DataFrame(){}
+
+template <class DT>
+DataFrame<DT>::DataFrame(int numCols){
+    noRows = 0;
+    noCols = numCols;
+
+    colNames = new char*[noCols];
+
+    dataRows = new DT*[noRows];
+}
 
 template <class DT>
 DataFrame<DT>::DataFrame(int numRows, int numCols){
@@ -44,8 +58,16 @@ DataFrame<DT>::DataFrame(int numRows, int numCols){
 
 template <class DT>
 void DataFrame<DT>::display(){
+    for(int i = 0; i < noCols; ++i){
+        if(i != noCols - 1){
+            cout << colNames[i] << ',';
+        } else {
+            cout << colNames[i] << '\n';
+        }
+    }
+
     for(int i = 0; i < noRows; ++i){
-        cout << dataRows[i] << endl;
+        cout << dataRows[i];
     }
     cout << endl;
 }
@@ -61,8 +83,13 @@ void DataFrame<DT>::setColName(int col, const char* name){
 }
 
 template <class DT>
-DT& DataFrame<DT>::operator[](int i){
+DT* DataFrame<DT>::operator[](int i){
     return dataRows[i];
+}
+
+template<class DT>
+int DataFrame<DT>::getNumberColumns(){
+    return noCols;
 }
 
 template <class DT>
@@ -77,25 +104,30 @@ int DataFrame<DT>::getNumberRows(){
 
 template <class DT>
 DataFrame<DT>* DataFrame<DT>::getRows(int* rows, int rLen){
-    DataFrame<DT>* df;
+    DataFrame<DT>* df = new DataFrame<DT>(noCols);
+    for(int i = 0; i < noCols; ++i){
+        df->setColName(i, colNames[i]);
+    }
     int row;
     for(int i = 0; i < rLen; ++i){
         row = rows[i];
-        df.addRow(dataRows[row]);
+        DT realRow = DT(*dataRows[row]);
+        df->addRow(realRow);
     }
     return df;
 }
 
 template <class DT>
-void DataFrame<DT>::addRow(DT*& newRow){
-    //cout << newRow << endl;
+void DataFrame<DT>::addRow(DT& newRow){
     DT** newRows;
     newRows = new DT*[noRows + 1];
     for(int i = 0; i < noRows; ++i){
         newRows[i] = dataRows[i];
     }
 
-    newRows[noRows] = newRow;
+    DT* addr = &newRow;
+
+    newRows[noRows] = addr;
     ++noRows;
     dataRows = newRows;
 }
@@ -150,6 +182,23 @@ DataFrame<DT>::~DataFrame(){
 
 }
 
+template <class T>
+ostream& operator<< (ostream& os, DataFrame<T>* df){
+    for(int i = 0; i < df->noCols; ++i){
+        if(i != df->noCols - 1){
+            os << df->colNames[i] << ',';
+        } else {
+            os << df->colNames[i] << '\n';
+        }
+    }
+
+    for(int i = 0; i < df->noRows; ++i){
+        os << df->dataRows[i];
+    }
+    os << endl;
+
+    return os;
+}
 
 
 
@@ -174,6 +223,7 @@ public:
     friend ostream& operator<< (ostream& os, const RowObject* ro);
     //Write overloaded = operator for 10 extra points
     //Write destructor
+    ~RowObject();
 };
 
 RowObject::RowObject(){}
@@ -187,9 +237,13 @@ RowObject::RowObject(int rid, int y, const char* cn, const char* s, int n, float
     averageAge = age;
 }
 
-ostream& operator<<(ostream& os, const RowObject* ro){
-    os << ro->year << ',' << ro->causeName << ',' << ro->state << ',' << ro->numberOfDeaths << ',' << ro->averageAge;
+ostream& operator<< (ostream& os, const RowObject* ro){
+    os << ro->ID << ',' << ro->year << ',' << ro->causeName << ',' << ro->state << ',' << ro->numberOfDeaths << ',' << ro->averageAge << '\n';
     return os;
+}
+
+RowObject::~RowObject(){
+
 }
 
 /*
@@ -259,7 +313,7 @@ int main(){
     }
 
     cin >> numRows;
-    DBT = new DataFrame<RowObject>(numRows, numCols);
+    DBT = new DataFrame<RowObject>(numCols);
 
     for(int i = 0; i < numCols; ++i){
         char* name = new char[100];
@@ -276,67 +330,9 @@ int main(){
     }
 
 //*************************************************************************/
-
-    cout << DBT->getNumberRows() << endl;
-    cout << numCols << endl;
-
-    char** names = new char*[numRows];
-
-/*
-    for(int i = 0; i < numRows; ++i){
-        char c;
-        cin >> c;
-
-        int year;
-        char* causeName;
-        char* state;
-        int numberOfDeaths;
-        float averageAge;
-
-*/
-
-        // char* name = new char[100];
-        //int j = 0;
-
-/*
-        while(c != '\n'){
-            name[j] = c;
-            cin.get(c);
-            ++j;
-        }
-        name[j] = '\0';
-*/
-/*
-        char** names = new char*[numRows];
-
-        for(int i = 0; i < numRows * numCols; ++i){
-            cout << "i: " << i << endl;
-            char* val = new char[100];
-            int j = 0;
-            
-            while(c != ',' && c != '\n' && !cin.eof()){
-                // cout << "C: " << c << endl;
-                val[j] = c;
-                cin.get(c);
-                ++j;
-            }
-            cin >> c;
-            val[j] = '\0';
-            cout << "val: " << val << endl;
-        }
-
-        for(int i = 0; i < numRows; ++i){
-            cout << names[i] << endl;
-        }
-
-
-        // names[i] = name;
-    }
-    */
+//Row objects are created
 
     char** lines = new char*[numRows];
-
-
     for(int i = 0; i < numRows; ++i){
         char c;
         cin >> c;
@@ -348,15 +344,9 @@ int main(){
             cin.get(c);
             ++j;
         }
-        // line[j] = ',';
-        // line[j + 1] = '\0';
         line[j] = '\0';
         lines[i] = line;
     }
-
-    // for(int i = 0; i < numRows; ++i){
-    //     cout << "ID: " << i << " Row: " << lines[i] << endl;
-    // }
 
     for(int i = 0; i < numRows; ++i){
         int ID;
@@ -387,9 +377,6 @@ int main(){
                     case(3):
                         numberOfDeaths = atoi(val);
                         break;
-                    // case(4):
-                    //     averageAge = atof(val);
-                    //     break;
                 }
                    val = new char[100];
                     valIndex = 0;
@@ -407,15 +394,34 @@ int main(){
             averageAge = atof(val);
         }
 
-        RowObject* newRow = new RowObject(i, year, causeName, state, numberOfDeaths, averageAge);
+        RowObject* newRow = new RowObject(i + 1, year, causeName, state, numberOfDeaths, averageAge);
 
-        cout << "Row: " << row << endl; 
+        // cout << newRow << endl;
+
+        DBT->insertRow(i, newRow);
     }
 
+    // DBT->display();
 
+//*************************************************************************/
 
+    (*DBT).setColName(4, "Number Deaths");
+    (*DBT).setColName(2, "Cause Name");
+    cout << DBT;
+    
 
+    DataFrame<RowObject>* tempRows = (*DBT).getRows(selectR, 10);
+    (*tempRows).display();
 
-
-
+// Testing addRow, constructor for RowObject and getNumberRows method
+RowObject* newRow;
+newRow = new RowObject((*DBT).getNumberRows(),2018,"Cancer","Oklahoma",200, 58.2);
+(*DBT).addRow(*newRow);
+// Testing destructor for RowObject
+delete newRow;
+newRow = new RowObject((*DBT).getNumberRows(),2018,"Opiod","Texas",2000, 32.4);
+(*DBT).addRow(*newRow);
+delete newRow;
+cout << (*DBT)[(*DBT).getNumberRows()-2];
+cout << (*DBT)[(*DBT).getNumberRows()-1];
 }
